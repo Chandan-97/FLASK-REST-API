@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response, json
 
 app = Flask(__name__)
 
@@ -27,9 +27,31 @@ def get_books():
 #     "isbn" : 6987
 # }
 
+def validBookObject(bookObject):
+    if "name" in bookObject and "price" in bookObject and "isbn" in bookObject:
+        return True
+    return False
+
 @app.route("/books", methods=["POST",])
 def add_book():
-    return jsonify(request.get_json())
+    request_data = request.get_json()
+    if(validBookObject(request_data)):
+        new_book = {
+            "name" : request_data["name"],
+            "price" : request_data["price"],
+            "isbn" : request_data["isbn"]
+        }
+        books.insert(0, new_book)
+        response = Response("", 201, mimetype="application/json")
+        response.headers['Location'] = "/books/" + str(new_book["isbn"])
+        return response
+    else:
+        invalidBookObjectErrorMsg = {
+            "error" : "Invalid book object passed in request",
+            "helpString" : "Data passed in similar to this {'name' : 'Book45', 'price' : 23, 'isbn' : 534}"
+        }
+        response = Response(json.dumps(invalidBookObjectErrorMsg), status=400, mimetype='application/json')
+        return response
 
 @app.route("/books/<int:isbn>")
 def get_books_by_isbn(isbn):
