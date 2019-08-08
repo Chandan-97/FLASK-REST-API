@@ -16,4 +16,6 @@
 * ```/books``` => return all books
 * ```/books/809``` => return book of isbn 809
 
+### POST route
+* ```/books``` => add new books
 
