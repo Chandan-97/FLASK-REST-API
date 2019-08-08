@@ -19,3 +19,7 @@
 ### POST route
 * ```/books``` => add new books
 
+### PUT route
+* ```/books/809``` => put book of isbn 809
+
+

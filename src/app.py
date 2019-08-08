@@ -63,4 +63,28 @@ def get_books_by_isbn(isbn):
             }
     return jsonify(return_value)
 
+# PUT
+# {
+#     "name" : 'The Odyssey',
+#     "price" : 0.9
+# }
+@app.route("/books/<int:isbn>", methods=["PUT"])
+def replace_book(isbn):
+    request_data = request.get_json()
+    new_book = {
+        "name" : request_data["name"],
+        "isbn" : isbn,
+        "price" : request_data["price"]
+    }
+
+    i = 0
+    for book in books:
+        currentIsbn = book['isbn']
+        if currentIsbn == isbn:
+            books[i] = new_book
+        i+=1
+    
+    response = Response("", status=204)
+    return response
+
 app.run(port=5000)
